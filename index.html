@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>客服运营数字化及 AI 应用探索</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --surface-soft: #eef4f8;
+      --text: #1f2933;
+      --muted: #60717f;
+      --line: #dce5ec;
+      --accent: #176b87;
+      --accent-deep: #0f4f64;
+      --accent-soft: #dff1f5;
+      --success: #23785b;
+      --warning: #9a6a1f;
+      --pending: #6f7680;
+      --shadow: 0 14px 36px rgba(31, 41, 51, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(180deg, #edf5f8 0%, var(--bg) 380px),
+        var(--bg);
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    main {
+      width: min(1100px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .hero {
+      padding: 72px 0 42px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--accent-deep);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    h1 {
+      max-width: 800px;
+      color: #14242d;
+      font-size: clamp(34px, 6vw, 56px);
+      line-height: 1.15;
+      font-weight: 820;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 850px;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .tags,
+    .meta-row,
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tags {
+      margin-top: 28px;
+    }
+
+    .tag,
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 5px 13px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag {
+      border: 1px solid rgba(23, 107, 135, 0.22);
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--accent-deep);
+    }
+
+    .status {
+      border: 1px solid rgba(35, 120, 91, 0.2);
+      background: #e7f5ef;
+      color: var(--success);
+    }
+
+    .status.pending {
+      border-color: rgba(111, 118, 128, 0.22);
+      background: #f0f3f5;
+      color: var(--pending);
+    }
+
+    .status.warning {
+      border-color: rgba(154, 106, 31, 0.22);
+      background: #fff5df;
+      color: var(--warning);
+    }
+
+    section {
+      padding: 34px 0;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      color: #172733;
+      font-size: 26px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .section-note {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 15px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 18px;
+      min-height: 100%;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 1px 0 rgba(31, 41, 51, 0.03);
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(23, 107, 135, 0.34);
+      box-shadow: var(--shadow);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h3 {
+      color: #172733;
+      font-size: 20px;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+
+    .card-number {
+      flex: 0 0 auto;
+      min-width: 34px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .detail-title {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--accent-deep);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .detail-text,
+    li {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 14px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .button.secondary {
+      border-color: var(--line);
+      background: #fff;
+      color: var(--accent-deep);
+    }
+
+    .actions {
+      align-self: end;
+    }
+
+    .value-panel {
+      display: grid;
+      grid-template-columns: 0.65fr 1.35fr;
+      gap: 34px;
+      align-items: start;
+      padding: 34px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f7f9 100%);
+    }
+
+    .value-label {
+      color: var(--accent-deep);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .value-panel p {
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    @media (max-width: 900px) {
+      .section-heading,
+      .value-panel {
+        display: block;
+      }
+
+      .section-note {
+        margin-top: 10px;
+        text-align: left;
+        white-space: normal;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .value-panel p {
+        margin-top: 18px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      main {
+        width: min(100% - 28px, 1100px);
+      }
+
+      .hero {
+        padding: 48px 0 24px;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      .subtitle,
+      .value-panel p {
+        font-size: 16px;
+      }
+
+      section {
+        padding: 26px 0;
+      }
+
+      .card,
+      .value-panel {
+        padding: 20px;
+      }
+
+      .actions {
+        display: grid;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="eyebrow">项目成果展示</div>
+      <h1 id="page-title">客服运营数字化及 AI 应用探索</h1>
+      <p class="subtitle">
+        围绕客服运营中的重复录入、状态跟进等高频痛点，以及个人工作中发现的任务管理和效率复盘需求，探索 AI 与自动化工具在实际工作场景中的应用。
+      </p>
+      <div class="tags" aria-label="关键词">
+        <span class="tag">建单自动化</span>
+        <span class="tag">物流状态看板</span>
+        <span class="tag">个人工作台</span>
+      </div>
+    </section>
+
+    <section aria-labelledby="overview-title">
+      <div class="section-heading">
+        <h2 id="overview-title">项目成果总览</h2>
+        <p class="section-note">每个项目均来源于真实工作痛点，展示当前已完成的原型效果、业务价值及后续优化方向。</p>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <div class="card-head">
+            <h3>建单自动化工具</h3>
+            <span class="card-number">01</span>
+          </div>
+          <div class="meta-row">
+            <span class="status">已实现原型</span>
+            <span class="status warning">后续需系统对接</span>
+          </div>
+          <div class="detail-list">
+            <p class="detail-text"><span class="detail-title">解决的业务问题</span>客服在创建订单或售后单据时，需要反复录入客户、产品、售后类型、地址等基础信息，容易重复劳动，也容易出现信息遗漏或填写不一致。</p>
+            <p class="detail-text"><span class="detail-title">当前已完成效果</span>已搭建建单助手原型，支持基础信息录入、字段校验、标准订单预览、草稿保存、重复风险检查、本地提交记录及数据导出。原型可以模拟客服从信息收集到订单生成前的完整操作链路。</p>
+            <p class="detail-text"><span class="detail-title">当前限制或待完善点</span>目前仍是本地原型，尚未直接接入瑞云、Nextop等业务系统；部分字段仍需要结合实际系统规则进一步确认。</p>
+            <p class="detail-text"><span class="detail-title">下一步计划</span>继续确认目标系统字段、人工审核节点及接口可行性，评估是否可以将本地订单信息进一步对接至真实业务系统。</p>
+          </div>
+          <div class="actions">
+            <a class="button" href="https://una1011hhh.github.io/order-automation-tool/" target="_blank" rel="noopener">查看原型</a>
+            <a class="button secondary" href="https://github.com/una1011hhh/order-automation-tool" target="_blank" rel="noopener">查看代码</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h3>物流状态自动跟进看板</h3>
+            <span class="card-number">02</span>
+          </div>
+          <div class="meta-row">
+            <span class="status">已实现原型</span>
+            <span class="status warning">受数据保密限制</span>
+          </div>
+          <div class="detail-list">
+            <p class="detail-text"><span class="detail-title">解决的业务问题</span>寄修单、退换货单等售后订单状态需要客服人工查询和跟进，容易出现遗漏，也不利于快速识别需要优先处理的异常订单。</p>
+            <p class="detail-text"><span class="detail-title">当前已完成效果</span>已搭建物流状态跟进看板原型，支持订单状态汇总、待跟进事项识别、异常订单分类、负责人指标、Top Waiting Orders、平均处理时长、日报看板、筛选及数据导出等能力。该原型用于模拟客服每日查看状态变化并主动跟进的工作方式。</p>
+            <p class="detail-text"><span class="detail-title">当前限制或待完善点</span>目前该看板仍处于原型验证阶段，尚未投入日常使用。受真实订单数据保密、系统权限及数据安全要求限制，暂未接入真实瑞云、物流或退换货数据，也尚未进一步完善为正式工作看板。</p>
+            <p class="detail-text"><span class="detail-title">下一步计划</span>在数据权限和安全边界明确后，再评估真实数据接入、定时刷新、状态变化提醒及异常订单推送的落地可行性。</p>
+          </div>
+          <div class="actions">
+            <a class="button" href="https://una1011hhh.github.io/service-status-dashboard/" target="_blank" rel="noopener">查看原型</a>
+            <a class="button secondary" href="https://github.com/una1011hhh/service-status-dashboard" target="_blank" rel="noopener">查看代码</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h3>个人工作台 WorkOS</h3>
+            <span class="card-number">03</span>
+          </div>
+          <div class="meta-row">
+            <span class="status">已实现原型</span>
+            <span class="status">已投入日常使用</span>
+          </div>
+          <div class="detail-list">
+            <p class="detail-text"><span class="detail-title">解决的业务问题</span>日常会议、沟通、需求和任务较分散，容易出现遗漏，也很难清楚判断时间主要花在哪些事项上。</p>
+            <p class="detail-text"><span class="detail-title">当前已完成效果</span>已搭建并投入使用个人工作台，支持今日概览、收集箱、任务中心、项目中心、会议中心、等待看板、工作日志、周复盘、报告中心、工时分析、工作分析、思考空间和显示设置等模块；同时支持本地数据、导出、报告生成、任务计时，以及部分云同步和飞书同步能力探索。</p>
+            <p class="detail-text"><span class="detail-title">当前限制或待完善点</span>目前已作为个人效率管理工具持续使用，部分云同步、飞书同步和权限配置仍需要根据实际使用场景继续优化。</p>
+            <p class="detail-text"><span class="detail-title">下一步计划</span>继续优化任务追踪、会议复盘、工时分析和项目管理能力，验证哪些模块适合后续推广到团队协作场景。</p>
+          </div>
+          <div class="actions">
+            <a class="button" href="https://una1011hhh.github.io/WorkOS/" target="_blank" rel="noopener">查看线上原型</a>
+            <a class="button secondary" href="https://github.com/una1011hhh/WorkOS" target="_blank" rel="noopener">查看代码</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="value-title">
+      <div class="value-panel">
+        <div>
+          <div class="value-label">总结</div>
+          <h2 id="value-title">探索价值</h2>
+        </div>
+        <div>
+          <p>
+            以上探索均来源于客服运营中的真实高频场景，虽然部分仍处于原型验证阶段，但已经将重复录入、状态跟进、任务管理等抽象问题转化为可体验的工具页面，为后续流程标准化、系统建设及自动化落地提供了实践基础。
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
